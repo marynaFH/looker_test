@@ -2,8 +2,8 @@ view: searches_dtt_general_ba_cm_ek_la_tk_ua {
   derived_table: {
     sql: 
       WITH
-          toDate('2025-04-15') AS current_day,
-          toDate('2025-04-14') AS previous_day,
+          toDate('2025-04-22') AS current_day,
+          toDate('2025-04-21') AS previous_day,
           [ 'BA', 'CM', 'EK', 'LA', 'TK', 'UA'] AS allowed_carriers
 
       SELECT
@@ -31,7 +31,8 @@ view: searches_dtt_general_ba_cm_ek_la_tk_ua {
                   OR api_user NOT IN ('kayak', 'kayakapp')
               )
               AND toDate(date_added) = current_day
-              AND JSONExtractString(request_options, 'suppliers_to_fetch') IN allowed_carriers
+              AND source = 'search'
+        AND JSONExtractString(request_options, 'suppliers_to_fetch') IN allowed_carriers
               AND toStartOfInterval(date_added, INTERVAL 1 HOUR) < toStartOfInterval(now(), INTERVAL 1 HOUR)
           GROUP BY
               day,
@@ -53,7 +54,8 @@ view: searches_dtt_general_ba_cm_ek_la_tk_ua {
                   OR api_user NOT IN ('kayak', 'kayakapp')
               )
               AND toDate(date_added) = previous_day
-              AND JSONExtractString(request_options, 'suppliers_to_fetch') IN allowed_carriers
+              AND source = 'search'
+        AND JSONExtractString(request_options, 'suppliers_to_fetch') IN allowed_carriers
               AND toStartOfInterval(date_added, INTERVAL 1 HOUR) < toStartOfInterval(now(), INTERVAL 1 HOUR)
           GROUP BY
               carriers,
