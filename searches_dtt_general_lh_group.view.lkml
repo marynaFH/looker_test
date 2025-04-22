@@ -2,8 +2,8 @@ view: searches_dtt_general_lh_group {
   derived_table: {
     sql: 
       WITH
-          toDate('2025-04-21') AS current_day,
-          toDate('2025-04-22') AS previous_day
+          toDate('2025-04-22') AS current_day,
+          toDate('2025-04-21') AS previous_day
 
       SELECT
           curr.day,
@@ -30,6 +30,7 @@ view: searches_dtt_general_lh_group {
                   OR api_user NOT IN ('kayak', 'kayakapp')
               )
               AND toDate(date_added) = current_day
+              AND source = 'search'
               AND JSONExtractString(request_options, 'suppliers_to_fetch') IN ('LH,LX,OS,SN,4Y')
               AND toStartOfInterval(date_added, INTERVAL 1 HOUR) < toStartOfInterval(now(), INTERVAL 1 HOUR)
           GROUP BY
@@ -51,6 +52,7 @@ view: searches_dtt_general_lh_group {
                   (api_user IN ('kayak', 'kayakapp') AND site_id = 1)
                   OR api_user NOT IN ('kayak', 'kayakapp')
               )
+              AND source = 'search'
               AND toDate(date_added) = previous_day
               AND JSONExtractString(request_options, 'suppliers_to_fetch') IN ('LH,LX,OS,SN,4Y')
               AND toStartOfInterval(date_added, INTERVAL 1 HOUR) < toStartOfInterval(now(), INTERVAL 1 HOUR)
